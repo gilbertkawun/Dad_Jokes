@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dad Jokes</title>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"
+    />
+    <style>
+      body {
+        background-color: pink;
+      }
+      #app {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        padding-top: 150px;
+      }
+      .card {
+        max-width: 60%;
+        min-width: 30%;
+      }
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" v-cloak>
+      <div class="card text-end">
+        <div class="card-body">
+          <h4 class="card-title">{{ setup }}</h4>
+          <p class="card-text">{{ punchline }}</p>
+          <p class="emoticon">&#128514;</p>
+          <a @click="reloadPage" class="btn btn-danger">Reload &#127758;</a>
+        </div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    <script>
+      let app = Vue.createApp({
+        data() {
+          return {
+            setup: null,
+            punchline: null,
+          };
+        },
+        async mounted() {
+          try {
+            await axios
+              .get("https://official-joke-api.appspot.com/random_joke")
+              .then((resp) => {
+                (this.setup = resp.data.setup),
+                  (this.punchline = resp.data.punchline);
+              });
+          } catch (err) {
+            console.log(err);
+          }
+        },
+        methods: {
+          reloadPage() {
+            window.location.reload();
+          },
+        },
+      });
+      app.mount("#app");
+    </script>
+  </body>
+</html>
